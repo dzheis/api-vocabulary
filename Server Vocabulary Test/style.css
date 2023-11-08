@@ -1,0 +1,118 @@
+body {
+    background-image: url("img/christopher-gower-vjMgqUkS8q8-unsplash.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+#container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    text-align: center;
+}
+
+#buttonContainer, .buttonContainer {
+    display: flex;
+    justify-content: center;
+}
+
+#randomBtn,
+#backBtn,
+#toggleButton,
+#forwardBtn,
+#toggleRu,
+.button {
+    margin: 40px 20px;
+    width: 200px;
+    height: 40px;
+    border-radius: 15px;
+    border: 1px solid gray;
+    cursor: pointer;
+    color: gray;
+    font-size: 0.9rem;
+    display: inline-block;
+    transition: background-color 0.4s ease-in-out;
+    background-color: transparent;
+}
+
+#randomBtn:hover,
+#backBtn:hover,
+#toggleButton:hover,
+#forwardBtn:hover,
+#toggleRu:hover,
+.button:hover {
+    color: black;
+    background-color: #f4d1ae;
+    box-shadow: 3px 3px 3px black;
+}
+
+#words {
+    width: 900px;
+    height: 450px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 50px;
+    color: gray;
+    background-color: #f4edea;
+    border: 10px solid #f4d1ae;
+}
+
+#words p,
+#words h3 {
+    font-size: 2.5rem;
+}
+
+.hidden, .nonVisible {
+    display: none;
+}
+
+.visible {
+    display: flex;
+}
+
+@media(max-width: 480px) {
+    #words p,
+    #words h3 {
+        font-size: 1rem;
+    }
+}
+
+.inputContainer {
+    width: 900px;
+    height: 200px;
+    margin: auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 50px 25px 50px;
+    color: gray;
+    background-color: #f4edea;
+    border: 10px solid #f4d1ae;
+}
+
+input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    margin: 10px 0;
+    width: 100%;
+    border : none;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background-color: lightsteelblue;
+    outline: none;
+}
+
+#wordForm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+}

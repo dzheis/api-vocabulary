@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Vocabulary</title>
+</head>
+
+<body>
+
+    <!-- Main content container -->
+    <div id="container">
+        <!-- Words and translation display section -->
+        <div id="words">
+            <h3 id="englishWordClick">English is that easy ^-^</h3>
+            <h3 id="russianWordClick" class="visible">Перевод</h3>
+            
+            <!-- Navigation buttons -->
+            <div id="buttonContainer">
+                <button id="backBtn">Previous Word</button>
+                <button id="toggleButton">Показать перевод</button>
+                <button id="randomBtn">Random Word</button>
+                <button id="forwardBtn">Next Word</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Word input section -->
+    <div class="inputContainer nonVisible">
+        <form id="wordForm">
+        <input type="text" id="englishWord" placeholder="Enter English word">
+        <input type="text" id="russianWord" placeholder="Введите Русское слово">
+        <button class="button" type="submit">Добавить слова в Словарик</button>
+        </form>
+    </div>
+    
+    <!-- Button to show/hide input fields -->
+    <div class="buttonContainer">
+        <button id="toggleButtonInput" class="button" onclick="toggleInputs()">Показать поля ввода</button>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+
+</html>
