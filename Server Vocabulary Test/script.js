@@ -9,7 +9,7 @@ const toggleRu = document.getElementById('toggleRu');
 const englishWord = document.getElementById('englishWordClick');
 const russianWord = document.getElementById('russianWordClick');
 
-const apiUrl = 'http://localhost:3000';
+const apiUrl = 'https://vocabulary-980c1232d2cb.herokuapp.com';
 let vocabulary = {}
 
 let currenIndex = 0;
@@ -101,7 +101,7 @@ document.getElementById('wordForm').addEventListener('submit', function (e) {
     }
 
     // Если проверка прошла успешно, продолжаем отправку данных на сервер
-    fetch('/add-word', {
+    fetch(`${apiUrl}/add-word`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
