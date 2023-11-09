@@ -9,7 +9,7 @@ const toggleRu = document.getElementById('toggleRu');
 const englishWord = document.getElementById('englishWordClick');
 const russianWord = document.getElementById('russianWordClick');
 
-const apiUrl = 'https://vocabulary-980c1232d2cb.herokuapp.com';
+const apiUrl = 'https://vocabulary-e561acf67931.herokuapp.com/';
 let vocabulary = {}
 
 let currenIndex = 0;
