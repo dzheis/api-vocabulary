@@ -25,7 +25,12 @@ function showWord(index) {
 };
 function fetchWordsFromServer() {
     fetch(`${apiUrl}/words`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Cетевой ответ не ok');
+            }
+            return response.json();
+        })
         .then(data => {
             data.forEach(word => {
                 vocabulary[word.english] = word.russian;
@@ -34,7 +39,10 @@ function fetchWordsFromServer() {
             showWord(currenIndex);
 
         })
-        .catch(error => console.error("Ошибка при загрузке слов:", error));
+        .catch(error => {
+            console.error("Ошибка при загрузке слов:", error)
+            alert(`Ошибка: ${error}`)
+        });
 }
 fetchWordsFromServer();
 
