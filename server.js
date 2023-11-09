@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -7,6 +8,9 @@ const Word = require('./models/word');
 
 
 const app = express();
+
+// Разрешить доступ всем доменам
+app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'Server Vocabulary Test')));
 // Подключаем body-parser
