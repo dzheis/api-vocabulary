@@ -24,6 +24,7 @@ function showWord(index) {
     russianWord.textContent = word;
 };
 function fetchWordsFromServer() {
+    console.log("Запрос к серверу отправлен");
     fetch(`${apiUrl}/words`)
         .then(response => {
             if (!response.ok) {
