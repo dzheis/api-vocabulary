@@ -44,7 +44,7 @@ app.post('/add-word', async (req, res) => {
     }
 });
 
-// Запускаем сервер на порту 3000
+// Запускаем сервер
 app.listen(process.env.PORT, () => {
     console.log(`Сервер запущен на порту ${process.env.PORT}`);
 });
