@@ -1,16 +1,15 @@
-body {
-    background-image: url("img/christopher-gower-vjMgqUkS8q8-unsplash.jpg");
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-attachment: fixed;
-    background-size: cover;
-}
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 #container {
     width: 100%;
     height: 100vh;
     display: flex;
+    align-items:center;
+    justify-content: center;
     text-align: center;
+    flex-direction: column;
 }
 
 #buttonContainer, .buttonContainer {
@@ -30,7 +29,7 @@ body {
     border-radius: 15px;
     border: 1px solid gray;
     cursor: pointer;
-    color: gray;
+    color: rgb(32, 32, 32);
     font-size: 0.9rem;
     display: inline-block;
     transition: background-color 0.4s ease-in-out;
@@ -49,7 +48,7 @@ body {
 }
 
 #words {
-    width: 900px;
+    width: 1000px;
     height: 450px;
     margin: auto;
     display: flex;
@@ -57,14 +56,15 @@ body {
     align-items: center;
     justify-content: center;
     padding: 0 50px;
-    color: gray;
+    color: rgb(32, 32, 32);
     background-color: #f4edea;
     border: 10px solid #f4d1ae;
 }
 
 #words p,
 #words h3 {
-    font-size: 2.5rem;
+    margin-bottom: 20px;
+    user-select: text;
 }
 
 .hidden, .nonVisible {
@@ -73,13 +73,7 @@ body {
 
 .visible {
     display: flex;
-}
-
-@media(max-width: 480px) {
-    #words p,
-    #words h3 {
-        font-size: 1rem;
-    }
+    margin-top: 40px;
 }
 
 .inputContainer {
@@ -115,4 +109,45 @@ input[type="text"] {
     justify-content: center;
     flex-direction: column;
     width: 100%;
+}
+/* Эксперименты */
+.searchContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 1000px;
+    margin: 40px;
+    padding: 20px 50px;
+    color: gray;
+    background-color: #f4edea;
+    border: 10px solid #f4d1ae;
+}
+
+.searchContainer input[type="text"] {
+    width: 80%; /* Адаптируйте ширину по необходимости */
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    border: 1px solid gray;
+    background-color: #fff;
+    transition: background-color 0.4s ease-in-out;
+}
+.searchContainer button {
+    width: 40%; /* Адаптируйте ширину по необходимости */
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    border: 1px solid gray;
+    cursor: pointer;
+    background-color: transparent;
+    transition: background-color 0.4s ease-in-out;
+    color: black;
+}
+.searchContainer button:hover {
+    color: black;
+    background-color: #f4d1ae;
+    box-shadow: 3px 3px 3px black;
 }

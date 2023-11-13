@@ -8,5 +8,11 @@
   },
   "engines": {
     "node": "18.18.2"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.5"
+  },
+  "scripts": {
+    "start":  "npx tailwindcss -i \"./Server Vocabulary Test/style/style.css\" -o \"./Server Vocabulary Test/style/output.css\" --watch"
   }
 }
