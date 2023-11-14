@@ -11,25 +11,24 @@
 
 <body class="m-0 p-0 box-border bg-custom-image bg-no-repeat bg-center bg-fixed bg-cover overflow-y-auto select-none" >
     <!-- Основной контейнер -->
-    <div id="container">
+    <div id="container" class="w-full h-screen flex items-center justify-center text-center flex-col">
         <!-- Секция для отображения слов и их перевода -->
-        <div id="words">
-            <h3 id="englishWordClick" class="text-6xl sm:text-5xl">English is that easy ^-^</h3>
-            <h3 id="russianWordClick" class="visible text-6xl sm:text-5xl">Перевод</h3>
-
+        <div id="words" class="w-1000 h-450 mx-auto flex flex-col items-center justify-center px-4 text-gray-800 bg-f4edea border-8 border-orange-200">
+            <h3 id="englishWordClick" class="text-6xl sm:text-5xl mb-20 select-text">English is that easy ^-^</h3>
+            <h3 id="russianWordClick" class="text-6xl sm:text-5xl mb-14 select-text">Перевод</h3>
             <!-- Кнопки навигации -->
-            <div id="buttonContainer" class="flex flex-col items-center space-y-1" >
-                <button id="backBtn" class="">Previous Word</button>
-                <button id="toggleButton" class="">Показать перевод</button>
-                <button id="randomBtn" class="">Random Word</button>
-                <button id="forwardBtn" class="">Next Word</button>
+            <div id="buttonContainer" class="flex justify-center" >
+                <button id="backBtn" class="m-2 px-4 py-2 w-48 h-10 rounded-xl border border-gray-300 cursor-pointer text-gray-800 text-sm inline-block transition duration-500 ease-in-out bg-transparent hover:bg-orange-200 hover:shadow-md">Previous Word</button>
+                <button id="toggleButton" class="m-2 px-4 py-2 w-48 h-10 rounded-xl border border-gray-300 cursor-pointer text-gray-800 text-sm inline-block transition duration-500 ease-in-out bg-transparent hover:bg-orange-200 hover:shadow-md">Показать перевод</button>
+                <button id="randomBtn" class="m-2 px-4 py-2 w-48 h-10 rounded-xl border border-gray-300 cursor-pointer text-gray-800 text-sm inline-block transition duration-500 ease-in-out bg-transparent hover:bg-orange-200 hover:shadow-md">Random Word</button>
+                <button id="forwardBtn" class="m-2 px-4 py-2 w-48 h-10 rounded-xl border border-gray-300 cursor-pointer text-gray-800 text-sm inline-block transition duration-500 ease-in-out bg-transparent hover:bg-orange-200 hover:shadow-md">Next Word</button>
             </div>
         </div>
         <!-- Секция поиска -->
-        <div class="searchContainer">
-            <input type="text" id="searchWordInput" placeholder="Введите слово для поиска">
-            <button id="searchWordButton">Поиск слов</button>
-            <button id="addSearchedWordButton">Добавить в словарик</button>
+        <div class="searchContainer flex flex-col items-center justify-center w-1000 m-10 p-5 py-12 bg-f4edea border-8 border-orange-200">
+            <input type="text" id="searchWordInput" class="w-4/5 p-2 my-2 border border-gray-300 rounded-md text-sm bg-white transition duration-700 ease-in-out" placeholder="Введите слово для поиска">
+            <button id="searchWordButton" class="w-2/5 p-2 my-2 rounded-xl border border-gray-300 cursor-pointer text-sm bg-transparent text-gray-800 transition duration-500 ease-in-out hover:bg-orange-200 hover:shadow-md">Поиск слов</button>
+            <button id="addSearchedWordButton" class="w-2/5 p-2 my-2 rounded-xl border border-gray-300 cursor-pointer text-sm bg-transparent text-gray-800 transition duration-500 ease-in-out hover:bg-orange-200 hover:shadow-md">Добавить в словарик</button>
         </div>
         <!-- Скрипты -->
         <script src="script.js"></script>
