@@ -11,7 +11,10 @@ const searchWordInput = document.getElementById('searchWordInput');
 const searchWordButton = document.getElementById('searchWordButton');
 const addSearchedWordButton = document.getElementById('addSearchedWordButton');
 
-const apiUrl = 'https://vocabulary-e561acf67931.herokuapp.com';
+const apiUrl = 'http://localhost:3000';  
+
+// 'https://vocabulary-e561acf67931.herokuapp.com';
+
 let vocabulary = {};
 let currentIndex = 0;
 let previousIndex = null;
@@ -26,19 +29,9 @@ function getTranslationLanguage(word) {
     }
 }
 
-// Функция для отображения слова на экране
-function showWord(index) {
-    let englishWords = Object.keys(vocabulary);
-    let wordKey = englishWords[index];
-    let word = vocabulary[wordKey];
-    englishWord.textContent = wordKey;
-    russianWord.textContent = word;
-}
-
 // Загрузка слов из сервера
 function fetchWordsFromServer() {
-    console.log("Запрос к серверу отправлен");
-    fetch(`${apiUrl}/words`)
+    fetch(`http://localhost:3000/words`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Сетевой ответ не ok');
@@ -48,15 +41,43 @@ function fetchWordsFromServer() {
         .then(data => {
             vocabulary = {};
             data.forEach(word => {
-                vocabulary[word.english] = word.russian;
+                vocabulary[word.english] = {
+                    russian: word.russian,
+                    transcription: word.transcription
+                }
+                console.log();
             });
-            showWord(currentIndex);
+            if (Object.keys(vocabulary).length > 0) {
+                showWord(currentIndex);
+            } else {
+                console.error("Ошибка при загрузке слов: Сервер не вернул данные");
+            }
         })
         .catch(error => {
             console.error("Ошибка при загрузке слов:", error);
         });
 }
 fetchWordsFromServer();
+
+// Функция для отображения слова на экране
+function showWord(index) {
+    let englishWords = Object.keys(vocabulary);
+    let wordKey = englishWords[index];
+    let word = vocabulary[wordKey];
+
+    if (!word) {
+        console.error(`Слово с ключом "${wordKey}" не найдено в словаре.`);
+        return;
+    }
+    
+    // Получение транскрипции из базы данных или внешнего API
+    const transcription = word.transcription || 'Нет транскрипции';
+    
+    englishWord.textContent = wordKey;
+    russianWord.textContent = word.russian;
+    document.getElementById('transcription').textContent = searchedWordData ? searchedWordData.transcription : transcription;
+}
+
 
 // Обработчики событий для кнопок навигации
 randomBtn.addEventListener('click', function () {
@@ -102,11 +123,15 @@ searchWordButton.addEventListener('click', function () {
             if (data.def && data.def.length > 0) {
                 const wordInfo = data.def[0];
                 const translation = wordInfo.tr.map(tr => tr.text).join(', ');
+                const transcription = wordInfo.ts || 'Нет транскрипции';
+
                 searchedWordData = {
                     [translationDirection.startsWith('en') ? 'english' : 'russian']: wordToSearch,
-                    [translationDirection.startsWith('en') ? 'russian' : 'english']: translation
+                    [translationDirection.startsWith('en') ? 'russian' : 'english']: translation,
+                    transcription: transcription
                 };
-                alert(`${wordToSearch} - ${translation}`);
+                console.log(searchedWordData);
+                alert(`${wordToSearch} - ${translation} (${transcription})`);
             } else {
                 alert('Слово не найдено');
                 searchedWordData = null;
@@ -118,7 +143,7 @@ searchWordButton.addEventListener('click', function () {
         });
 });
 
-// Обработчик для добавления слова в базу данных
+// Обработчик POST-запроса для добавления нового слова в базу данных
 addSearchedWordButton.addEventListener('click', function () {
     if (searchedWordData) {
         fetch(`${apiUrl}/add-word`, {
@@ -126,7 +151,11 @@ addSearchedWordButton.addEventListener('click', function () {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(searchedWordData)
+            body: JSON.stringify({
+                english: searchedWordData.english,
+                russian: searchedWordData.russian,
+                transcription: searchedWordData.transcription || ''
+            })
         })
             .then(response => response.json())
             .then(data => {
