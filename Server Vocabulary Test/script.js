@@ -1,4 +1,6 @@
 "use strict";
+// Подключение библиотеки tw-elements
+
 
 // Получение элементов интерфейса
 const forwardBtn = document.getElementById('forwardBtn');
@@ -11,7 +13,7 @@ const searchWordInput = document.getElementById('searchWordInput');
 const searchWordButton = document.getElementById('searchWordButton');
 const addSearchedWordButton = document.getElementById('addSearchedWordButton');
 
-const apiUrl = 'http://localhost:3000';  
+const apiUrl = 'http://localhost:3000';
 
 // 'https://vocabulary-e561acf67931.herokuapp.com';
 
@@ -69,15 +71,54 @@ function showWord(index) {
         console.error(`Слово с ключом "${wordKey}" не найдено в словаре.`);
         return;
     }
-    
+
     // Получение транскрипции из базы данных или внешнего API
     const transcription = word.transcription || 'Нет транскрипции';
-    
+   
+
     englishWord.textContent = wordKey;
     russianWord.textContent = word.russian;
-    document.getElementById('transcription').textContent = searchedWordData ? searchedWordData.transcription : transcription;
-}
+    document.getElementById('transcription').innerHTML = `[${word.transcription}] 
+                <div id="svgContainer" class="inline-block mr-2 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-5 h-4 sm:w-7 sm:h-7">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                         d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                    </svg>
+                </div>`
 
+                const apiKey = 'dfbb085b-0663-4088-8173-cc21ce0574da';
+
+                fetch(`https://www.dictionaryapi.com/api/v3/references/collegiate/json/${wordKey}?key=${apiKey}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0 && data[0].hwi && data[0].hwi.prs && data[0].hwi.prs[0] && data[0].hwi.prs[0].sound && data[0].hwi.prs[0].sound.audio) {
+                            const audioFile = data[0].hwi.prs[0].sound.audio;
+                            const audioUrl = `https://media.merriam-webster.com/soundc11/${audioFile[0]}/${audioFile}.wav`;
+            
+                            // Добавляем кнопку для воспроизведения аудио
+                            const audioButton = document.createElement('button');
+                            audioButton.textContent = 'Воспроизвести аудио';
+                            audioButton.addEventListener('click', function () {
+                                const audio = new Audio(audioUrl);
+                                audio.play();
+                            });
+            
+                            // Добавляем кнопку в DOM
+                            document.getElementById('svgContainer').addEventListener('click', function () {
+                                const audio = new Audio(audioUrl);
+                                audio.play();
+                            });
+                        } else {
+                            console.error('Аудио не найдено для слова:', wordKey);
+                            document.getElementById('audioContainer').innerHTML = '';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка при запросе аудио:', error);
+                        document.getElementById('audioContainer').innerHTML = '';
+                    });
+            }  
 
 // Обработчики событий для кнопок навигации
 randomBtn.addEventListener('click', function () {
@@ -109,7 +150,7 @@ toggleButton.addEventListener('click', function () {
 
 // Обработчик поиска слова в Yandex
 searchWordButton.addEventListener('click', function () {
-    const wordToSearch = searchWordInput.value.trim();
+    const wordToSearch = searchWordInput.value.trim().toLowerCase();
     if (!wordToSearch) {
         alert('Пожалуйста, введите слово для поиска');
         return;
@@ -130,8 +171,13 @@ searchWordButton.addEventListener('click', function () {
                     [translationDirection.startsWith('en') ? 'russian' : 'english']: translation,
                     transcription: transcription
                 };
-                console.log(searchedWordData);
-                alert(`${wordToSearch} - ${translation} (${transcription})`);
+
+                document.getElementById('searchResult').innerText = `${wordToSearch} - ${translation} [${transcription}]`;
+               
+                //TODO: модальное окно переделать!
+
+                 // Открываем модальное окно
+                $('#searchModal').modal('show');
             } else {
                 alert('Слово не найдено');
                 searchedWordData = null;
@@ -140,6 +186,10 @@ searchWordButton.addEventListener('click', function () {
         .catch(error => {
             console.error('Ошибка при запросе:', error);
             searchedWordData = null;
+        })
+        .finally(() => {
+            // Очистка input после выполнения поиска
+            searchWordInput.value = '';
         });
 });
 
@@ -152,8 +202,8 @@ addSearchedWordButton.addEventListener('click', function () {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                english: searchedWordData.english,
-                russian: searchedWordData.russian,
+                english: searchedWordData.english.toLowerCase(),
+                russian: searchedWordData.russian.toLowerCase(),
                 transcription: searchedWordData.transcription || ''
             })
         })

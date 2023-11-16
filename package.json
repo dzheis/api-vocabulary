@@ -3,8 +3,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "flowbite": "^2.1.1",
     "mongodb": "^6.1.0",
-    "mongoose": "^7.6.3"
+    "mongoose": "^7.6.3",
+    "tw-elements": "^1.0.0"
   },
   "engines": {
     "node": "18.18.2"
@@ -13,6 +15,6 @@
     "tailwindcss": "^3.3.5"
   },
   "scripts": {
-    "start":  "npx tailwindcss -i \"./Server Vocabulary Test/style/style.css\" -o \"./Server Vocabulary Test/style/output.css\" --watch"
+    "start": "npx tailwindcss -i \"./Server Vocabulary Test/style/style.css\" -o \"./Server Vocabulary Test/style/output.css\" --watch"
   }
 }
