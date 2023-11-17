@@ -1,6 +1,10 @@
 "use strict";
-// Подключение библиотеки tw-elements
-
+//TODO: Переделать транскрипцию, при обратном переводе не отображается - возможно прийдётся сменить API, яндекс не даёт транскрипцию английского слова при поиске через русское
+//TODO: Переделать модальное окно с bootstrap на tailwindcss
+//TODO: Заменить все Алерты на кастомные модальные окна
+//TODO: Додавить responsive для модальных окон
+//TODO: Добавить проверку на существование слова в БД, выводить модальное окно с предупреждением, что слово уже есть в Словарике
+//TODO: Провести рефакторинг всего кода перед финальным деплоем
 
 // Получение элементов интерфейса
 const forwardBtn = document.getElementById('forwardBtn');
@@ -59,7 +63,6 @@ function fetchWordsFromServer() {
             console.error("Ошибка при загрузке слов:", error);
         });
 }
-fetchWordsFromServer();
 
 // Функция для отображения слова на экране
 function showWord(index) {
@@ -74,7 +77,6 @@ function showWord(index) {
 
     // Получение транскрипции из базы данных или внешнего API
     const transcription = word.transcription || 'Нет транскрипции';
-   
 
     englishWord.textContent = wordKey;
     russianWord.textContent = word.russian;
@@ -87,69 +89,44 @@ function showWord(index) {
                     </svg>
                 </div>`
 
-                const apiKey = 'dfbb085b-0663-4088-8173-cc21ce0574da';
+    const apiKey = 'dfbb085b-0663-4088-8173-cc21ce0574da';
 
-                fetch(`https://www.dictionaryapi.com/api/v3/references/collegiate/json/${wordKey}?key=${apiKey}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.length > 0 && data[0].hwi && data[0].hwi.prs && data[0].hwi.prs[0] && data[0].hwi.prs[0].sound && data[0].hwi.prs[0].sound.audio) {
-                            const audioFile = data[0].hwi.prs[0].sound.audio;
-                            const audioUrl = `https://media.merriam-webster.com/soundc11/${audioFile[0]}/${audioFile}.wav`;
-            
-                            // Добавляем кнопку для воспроизведения аудио
-                            const audioButton = document.createElement('button');
-                            audioButton.textContent = 'Воспроизвести аудио';
-                            audioButton.addEventListener('click', function () {
-                                const audio = new Audio(audioUrl);
-                                audio.play();
-                            });
-            
-                            // Добавляем кнопку в DOM
-                            document.getElementById('svgContainer').addEventListener('click', function () {
-                                const audio = new Audio(audioUrl);
-                                audio.play();
-                            });
-                        } else {
-                            console.error('Аудио не найдено для слова:', wordKey);
-                            document.getElementById('audioContainer').innerHTML = '';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Ошибка при запросе аудио:', error);
-                        document.getElementById('audioContainer').innerHTML = '';
-                    });
-            }  
+    fetch(`https://www.dictionaryapi.com/api/v3/references/collegiate/json/${wordKey}?key=${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0 && data[0].hwi && data[0].hwi.prs && data[0].hwi.prs[0] && data[0].hwi.prs[0].sound && data[0].hwi.prs[0].sound.audio) {
+                const audioFile = data[0].hwi.prs[0].sound.audio;
+                const audioUrl = `https://media.merriam-webster.com/soundc11/${audioFile[0]}/${audioFile}.wav`;
 
-// Обработчики событий для кнопок навигации
-randomBtn.addEventListener('click', function () {
-    previousIndex = currentIndex;
-    let englishWords = Object.keys(vocabulary);
-    let randomIndex = Math.floor(Math.random() * englishWords.length);
-    currentIndex = randomIndex;
-    showWord(currentIndex);
-});
+                document.getElementById('svgContainer').addEventListener('click', function () {
+                    const audio = new Audio(audioUrl);
+                    audio.play();
+                });
+            } else {
+                console.error('Аудио не найдено для слова:', wordKey);
+                //TODO: выводить тут модальное окно, если 
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при запросе аудио:', error);
+            //TODO: выводить тут модальное окно, если 
+        });
+}
 
-backBtn.addEventListener('click', function () {
-    if (previousIndex !== null) {
-        currentIndex = previousIndex;
-        showWord(currentIndex);
+// Обработчик нажатия клавиши Enter для поиска слова
+searchWordInput.addEventListener('keypress', function (event) {
+    // Код клавиши Enter
+    const enterKeyCode = 13;
+
+    // Проверяем, была ли нажата клавиша Enter
+    if (event.keyCode === enterKeyCode) {
+        // Вызываем функцию поиска слова
+        searchWordFunction();
     }
 });
 
-forwardBtn.addEventListener('click', function () {
-    let englishWords = Object.keys(vocabulary);
-    currentIndex = (currentIndex + 1) % englishWords.length;
-    showWord(currentIndex);
-});
-
-toggleButton.addEventListener('click', function () {
-    russianWord.classList.toggle('visible');
-    russianWord.classList.toggle('hidden');
-    toggleButton.innerText = russianWord.classList.contains('visible') ? "Скрыть перевод" : "Показать перевод";
-});
-
-// Обработчик поиска слова в Yandex
-searchWordButton.addEventListener('click', function () {
+// Функция для поиска слова в Yandex
+function searchWordFunction() {
     const wordToSearch = searchWordInput.value.trim().toLowerCase();
     if (!wordToSearch) {
         alert('Пожалуйста, введите слово для поиска');
@@ -173,10 +150,7 @@ searchWordButton.addEventListener('click', function () {
                 };
 
                 document.getElementById('searchResult').innerText = `${wordToSearch} - ${translation} [${transcription}]`;
-               
-                //TODO: модальное окно переделать!
-
-                 // Открываем модальное окно
+                // Открываем модальное окно
                 $('#searchModal').modal('show');
             } else {
                 alert('Слово не найдено');
@@ -191,7 +165,7 @@ searchWordButton.addEventListener('click', function () {
             // Очистка input после выполнения поиска
             searchWordInput.value = '';
         });
-});
+};
 
 // Обработчик POST-запроса для добавления нового слова в базу данных
 addSearchedWordButton.addEventListener('click', function () {
@@ -223,3 +197,55 @@ addSearchedWordButton.addEventListener('click', function () {
         alert('Нет данных для добавления');
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Обработчики событий для кнопок навигации
+randomBtn.addEventListener('click', function () {
+    previousIndex = currentIndex;
+    let englishWords = Object.keys(vocabulary);
+    let randomIndex = Math.floor(Math.random() * englishWords.length);
+    currentIndex = randomIndex;
+    showWord(currentIndex);
+});
+
+backBtn.addEventListener('click', function () {
+    if (previousIndex !== null) {
+        currentIndex = previousIndex;
+        showWord(currentIndex);
+    }
+});
+
+forwardBtn.addEventListener('click', function () {
+    let englishWords = Object.keys(vocabulary);
+    currentIndex = (currentIndex + 1) % englishWords.length;
+    showWord(currentIndex);
+});
+
+toggleButton.addEventListener('click', function () {
+    russianWord.classList.toggle('visible');
+    russianWord.classList.toggle('hidden');
+    toggleButton.innerText = russianWord.classList.contains('visible') ? "Скрыть перевод" : "Показать перевод";
+});
+
+fetchWordsFromServer();

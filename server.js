@@ -40,10 +40,10 @@ app.post('/add-word', async (req, res) => {
         const newWord = new Word({
             english: req.body.english, // Извлечение английского слова из тела запроса
             russian: req.body.russian, // Извлечение русского слова из тела запроса
-            transcription: req.body.transcription  
+            transcription: req.body.transcription
         });
         console.log('New Word Data:', newWord); // Выводим данные нового слова в консоль
-        
+
         await newWord.save(); // Сохранение нового слова в базе данных
         res.json({ success: true }); // Отправка успешного ответа в формате JSON
     } catch (error) {

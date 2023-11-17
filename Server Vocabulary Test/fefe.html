@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transcription Lookup</title>
+</head>
+<body>
+  <label for="wordInput">Введите слово на русском:</label>
+  <input type="text" id="wordInput">
+  <button onclick="lookupTranscription()">Поиск транскрипции</button>
+
+  <div id="transcriptionResult"></div>
+
+  <script>
+    async function lookupTranscription() {
+      const russianWord = document.getElementById('wordInput').value;
+
+      // Step 1: Поиск английского эквивалента русского слова
+      const translationResponse = await fetch(`https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20231112T183924Z.d0433efb3942c6ed.a9f789cb257dbe73aed3b64b45e24cb94a0ecd7c&lang=ru-en&text=${russianWord}`);
+      const translationData = await translationResponse.json();
+
+      if (translationData.def && translationData.def[0] && translationData.def[0].tr && translationData.def[0].tr[0] && translationData.def[0].tr[0].text) {
+        const englishWord = translationData.def[0].tr[0].text;
+
+        // Step 2: Получение транскрипции для английского слова
+        const transcriptionResponse = await fetch(`https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20231112T183924Z.d0433efb3942c6ed.a9f789cb257dbe73aed3b64b45e24cb94a0ecd7c&lang=en-ru&text=${englishWord}`);
+        const transcriptionData = await transcriptionResponse.json();
+
+        if (transcriptionData.def && transcriptionData.def[0] && transcriptionData.def[0].ts) {
+          const transcription = transcriptionData.def[0].ts;
+          document.getElementById('transcriptionResult').innerText = `Транскрипция для слова "${englishWord}": ${transcription}`;
+        } else {
+          document.getElementById('transcriptionResult').innerText = 'Транскрипция не найдена.';
+        }
+      } else {
+        document.getElementById('transcriptionResult').innerText = 'Английское слово не найдено.';
+      }
+    }
+  </script>
+</body>
+</html>
