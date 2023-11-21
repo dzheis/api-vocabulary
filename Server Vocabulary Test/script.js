@@ -5,6 +5,7 @@
 //TODO: Додавить responsive для модальных окон
 //TODO: Добавить проверку на существование слова в БД, выводить модальное окно с предупреждением, что слово уже есть в Словарике
 //TODO: Провести рефакторинг всего кода перед финальным деплоем
+//TODO: Написать функциу модального окна и заменить все алерты
 
 // Получение элементов интерфейса
 const forwardBtn = document.getElementById('forwardBtn');
@@ -16,6 +17,10 @@ const russianWord = document.getElementById('russianWordClick');
 const searchWordInput = document.getElementById('searchWordInput');
 const searchWordButton = document.getElementById('searchWordButton');
 const addSearchedWordButton = document.getElementById('addSearchedWordButton');
+const modal = document.getElementById('modal');
+const closeModalButton = document.getElementById('closeModalButton');
+const englishWordResult = document.getElementById('englishWordResult');
+
 
 const apiUrl = 'http://localhost:3000';
 
@@ -37,7 +42,7 @@ function getTranslationLanguage(word) {
 
 // Загрузка слов из сервера
 function fetchWordsFromServer() {
-    fetch(`http://localhost:3000/words`)
+    fetch(`${apiUrl}/words`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Сетевой ответ не ok');
@@ -113,13 +118,18 @@ function showWord(index) {
         });
 }
 
+// Обработчик клика по кнопке поиска слова
+searchWordButton.addEventListener('click', function () {
+    searchWordFunction();
+});
+
 // Обработчик нажатия клавиши Enter для поиска слова
 searchWordInput.addEventListener('keypress', function (event) {
     // Код клавиши Enter
-    const enterKeyCode = 13;
+    const enterKey = 'Enter';
 
     // Проверяем, была ли нажата клавиша Enter
-    if (event.keyCode === enterKeyCode) {
+    if (event.key === enterKey) {
         // Вызываем функцию поиска слова
         searchWordFunction();
     }
@@ -148,10 +158,14 @@ function searchWordFunction() {
                     [translationDirection.startsWith('en') ? 'russian' : 'english']: translation,
                     transcription: transcription
                 };
+                
+                //TODO: Сдесь должен быть вызов функции, модального окна
 
-                document.getElementById('searchResult').innerText = `${wordToSearch} - ${translation} [${transcription}]`;
+                englishWordResult.innerText = `${wordToSearch}`;
+                document.getElementById('searchResult').innerText = `${translation} [${transcription}]`;
                 // Открываем модальное окно
-                $('#searchModal').modal('show');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
             } else {
                 alert('Слово не найдено');
                 searchedWordData = null;
@@ -196,6 +210,11 @@ addSearchedWordButton.addEventListener('click', function () {
     } else {
         alert('Нет данных для добавления');
     }
+});
+
+closeModalButton.addEventListener('click', () => {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
 });
 
 
